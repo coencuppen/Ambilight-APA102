@@ -1,6 +1,6 @@
 # Ambilight APA102 Nano
 This ambilight code works with the APA102 LED strip. The Arduino Nano drives these LED's super fast. It feels like the LED's updates real time.
-I achieved this by directly writing inside the Arduino Nano registers and by using the SPI interface.
+This is achieved by directly writing inside the Arduino Nano registers and by using the SPI interface.
 
 For the communication with the pc I use prismatik (unofficial)
 https://github.com/psieg/Lightpack/releases
