@@ -25,11 +25,22 @@ public:
     clear();
   }
 
+  void startFrame(){
+    spi::sendByte(0x00);
+    spi::sendByte(0x00);
+    spi::sendByte(0x00);
+    spi::sendByte(0x00);
+  }
+
+  void endFrame(){
+    spi::sendByte(0xFF);
+    spi::sendByte(0xFF);
+    spi::sendByte(0xFF);
+    spi::sendByte(0xFF);
+  }
+
   void clear() const {
-    spi::sendByte(0x00);
-    spi::sendByte(0x00);
-    spi::sendByte(0x00);
-    spi::sendByte(0x00);
+    startFrame();
 
     for (uint8_t led = 0; led < size; ++led) {
       spi::sendByte(0xE0 | 255);
@@ -38,14 +49,11 @@ public:
       spi::sendByte(0x00);
     }
 
-    spi::sendByte(0xFF);
-    spi::sendByte(0xFF);
-    spi::sendByte(0xFF);
-    spi::sendByte(0xFF);
+    endFrame();
   }
 
   void sendColor(const uint8_t &red, const uint8_t &green, const uint8_t &blue, uint8_t brightness = 255){
-    spi::sendByte( 0xE0 | brightness);   // Start frame for a LED with highest 3 bits set to 111
+    spi::sendByte( 0xE0 | brightness);   // start frame for a LED with highest 3 bits set to 111
     spi::sendByte(blue); 
     spi::sendByte(green);
     spi::sendByte(red);  
@@ -54,22 +62,16 @@ public:
   void sendColorAll(const uint8_t &red, const uint8_t &green, const uint8_t &blue, uint8_t brightness = 255) const {
     clear();
 
-    spi::sendByte(0x00);
-    spi::sendByte(0x00);
-    spi::sendByte(0x00);
-    spi::sendByte(0x00);
+    startFrame();
 
     for (uint8_t led = 0; led < size; ++led) {
-      spi::sendByte( 0xE0 | brightness);   // Start frame for a LED with highest 3 bits set to 111
+      spi::sendByte( 0xE0 | brightness);   // start frame for a LED with highest 3 bits set to 111
       spi::sendByte(blue); 
       spi::sendByte(green);
       spi::sendByte(red);  
     }
 
-    spi::sendByte(0xFF);
-    spi::sendByte(0xFF);
-    spi::sendByte(0xFF);
-    spi::sendByte(0xFF);
+    endFrame();
   }
 };
 

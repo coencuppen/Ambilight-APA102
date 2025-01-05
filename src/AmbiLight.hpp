@@ -2,6 +2,12 @@
 #define LIGHT_EFFECTS_HPP
 
 #define BRIGHTNESS 255
+#define NUM_OF_LED_ANIMATION 1
+#define NUM_OF_ANIMATION_SPEED 8 // 8ms
+#define APA102_BRIGHTNESS_RANGE 31
+
+#define STARTUP_ANIMATION_COLOR 216,129,85
+
 
 #include <util/delay.h>
 
@@ -14,17 +20,44 @@ private:
   uint16_t numOfLeds;
   APA102 *Leds;
 
+  void startupAnimation() {
+    // Leds->clear();
+    // for(unsigned int i = 0; i < NUM_OF_LED_ANIMATION; i++){
+    //   for(unsigned int i = 0; i < numOfLeds; i++){
+    //     Leds->startFrame();
+    //     for(unsigned int j = 0; j < numOfLeds; j++){
+    //       if(j == i){
+    //         Leds->sendColor(STARTUP_ANIMATION_COLOR, 127);
+    //       } else {
+    //         Leds->sendColor(0, 0, 0, 0);
+    //       }
+    //     }
+    //     Leds->endFrame();
+    //     _delay_ms(NUM_OF_ANIMATION_SPEED);
+    //   }
+    // }
+
+    Leds->clear();
+    Leds->startFrame();
+
+    for(unsigned int i = 0; i < APA102_BRIGHTNESS_RANGE; i++){ 
+      Leds->sendColorAll(STARTUP_ANIMATION_COLOR, i);
+      _delay_ms(30);
+    }
+    _delay_ms(900);
+
+    for(unsigned int i = APA102_BRIGHTNESS_RANGE; i > 0; i--){
+      Leds->sendColorAll(STARTUP_ANIMATION_COLOR, i);
+      _delay_ms(25);
+    }
+
+    Leds->clear();
+  }
+
 public:
   AmbiLight(uint16_t numOfLeds) : numOfLeds(numOfLeds) {
     Leds = new APA102{numOfLeds + 1};
-
-    Leds->sendColorAll(255, 0, 0);
-    _delay_ms(500);
-    Leds->sendColorAll(0, 255, 0);
-    _delay_ms(500);
-    Leds->sendColorAll(0, 0, 255);
-    _delay_ms(500);
-    Leds->clear();
+    startupAnimation();
   }
 
   void ambiLoop() {
